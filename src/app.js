@@ -1,5 +1,5 @@
 const express = require("express");
-
+const mongoose = require("mongoose");
 const { auth } = require("express-oauth2-jwt-bearer");
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -17,11 +17,21 @@ const autenticacion = auth({
 const app = express();
 app.use(express.json());
 
-// Importamos el Router de Libros
-const librosRouter = require("./routes/libros");
+mongoose.connect(process.env.MONGODB);
+mongoose.connection.on(
+  "error",
+  console.error.bind(console, "Error de conexión a MongoDB: ")
+);
+mongoose.connection.once("open", () => {
+  console.log("La conexión se estableció exitosamente");
+});
 
+// Rutas
+const librosRouter = require("./routes/libros");
+const usuariosRouter = require("./routes/usuarios");
 //Configuramos el middleware de autenticacion
 app.use("/api/libros", autenticacion,  librosRouter);
+app.use("/api/usuarios", autenticacion,  usuariosRouter);
 
 app.use(errorHandler);
 

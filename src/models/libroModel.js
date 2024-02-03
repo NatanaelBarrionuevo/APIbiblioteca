@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_DB, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
 
 const LibroSchema = new mongoose.Schema({
-  titulo: String,
-  autor: String
+  codigo: {type: Number, required: true},
+  titulo: {type: String, required: true},
+  autor: {type: String, required: true},
+  activo: {type: Boolean, required: true},
 }, { collection: 'libros' });
 
 const Libro = mongoose.model('Libro', LibroSchema);
